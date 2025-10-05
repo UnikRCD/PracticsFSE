@@ -11,16 +11,14 @@ def main():
     map_distances = []
     for i in range(1, len(lines)):
         line = lines[i].strip()
-        if line:  # проверка на пустую строку
+        if line: 
             map_distances.extend([float(x) for x in line.split()])
     
-    # Удаление нулевых расстояний (кроме первого)
-    filtered_distances = [map_distances[0]]  # первое расстояние всегда включаем
+    filtered_distances = [map_distances[0]]
     for dist in map_distances[1:]:
         if dist > 0:
             filtered_distances.append(dist)
     
-    # Расчет реальных расстояний в милях
     mileage_distances = [dist * scale_factor for dist in filtered_distances]
     
 
@@ -42,4 +40,5 @@ def main():
     print(f"Total Distance: {total_mileage:.1f} miles")
 
 if __name__ == "__main__":
+
     main()

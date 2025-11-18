@@ -35,3 +35,26 @@ def read_commands(filename):
            )
        commands.append(commands_data)
     return commands
+
+def decode (x):
+    word=""
+    for i in range(len(x)):
+        if x[i].isdigit():
+            word =word+x[i+1]*(int(x[i])-1)
+        else:
+            word=word+x[i]
+        
+    return word
+
+def searches_data(prot):
+    search=""
+    prot=decode(prot)
+    prots=read_sequences(file_prot)
+    
+    for i in range(len(prots)):
+        if prot in (prots[i])[2]:
+            search=(prots[i])[1]+" "+ (prots[i])[0]
+    return search
+
+    if search=="":
+        return 'NOT FOUND'

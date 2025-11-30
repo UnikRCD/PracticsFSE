@@ -58,7 +58,39 @@ def get_stats(users, workouts):
 '''
     return text
 
+def analyze_user_activity(users, workouts):
+    
+    user_stats = []
+      
+    for user in users:
+        user_workouts = [workout for workout in workouts if workout['user_id'] == user['user_id']]
+        
+        all_workouts = len(user_workouts)
+        all_calories = sum(workout['calories'] for workout in user_workouts)
+        all_duration = float(sum(workout['duration'] for workout in user_workouts)/60)
+
+        stats = ({
+            'user_id': user['user_id'],
+            'name': user['name'],
+            'all_workouts': all_workouts,
+            'all_calories': all_calories,
+            'all_time': all_duration,
+        })
+        
+        user_stats.append(stats)
+        
+        top_users = sorted(user_stats, key=lambda x: x['all_workouts'], reverse=True)[:3]
+        
+    print("\nТОП-3 АКТИВНЫХ ПОЛЬЗОВАТЕЛЕЙ")
+    print("=" * 50)
+    for i, user in enumerate(top_users, 1):
+        print(f"{i}. {user['name']}")
+        print(f"Тренировок: {user['all_workouts']}")
+        print(f"Калорий: {user['all_calories']}")
+        print(f"Время: {user['all_time']:.2f} часов\n")
+        
+
 users = load_users_data()
 workouts = load_workouts_data()
 
-print(get_stats(users, workouts))
+print(analyze_user_activity(users, workouts))

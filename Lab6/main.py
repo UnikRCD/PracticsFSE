@@ -41,6 +41,9 @@ def load_workouts_data():
     except FileNotFoundError:
         print("Файл не найден")
         return []
+
+users = load_users_data()
+workouts = load_workouts_data()
     
 def get_stats(users, workouts):
     all_workouts = len(workouts)
@@ -54,7 +57,7 @@ def get_stats(users, workouts):
 Всего пользователей: {all_users}
 Сожжено калорий: {all_calories}
 Общее время: {all_time:.1f} часов
-Пройдено дистаеции: {all_distance:.1f} км
+Пройдено дистанции: {all_distance:.1f} км
 '''
     return text
 
@@ -120,7 +123,20 @@ def analyze_workout_types(workouts):
         print(f"Средняя длительность: {avg_duration:.0f} мин")
         print(f"Средние калории: {avg_calories:.0f} ккал\n")
 
-users = load_users_data()
-workouts = load_workouts_data()
+def find_user_workouts(users, user_name):
+    target_user = None
+    
+    for user in users:
+        if user.get('name') == user_name:
+            target_user = user
+            break
 
-print(analyze_workout_types(workouts))
+    user_workouts = []
+    for workout in workouts:
+        if workout.get('user_id') == target_user.get('user_id'):
+            user_workouts.append(workout)
+            
+    return user_workouts
+
+user_name = "Борис"
+print(find_user_workouts(users, user_name))

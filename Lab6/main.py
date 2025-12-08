@@ -181,6 +181,48 @@ def analyze_user(users, workouts, user_workouts):
 '''
     return text
 
+def plot_workout_types_pie(workouts, title="Распределение типов тренировок"):
+    
+    type_counts = Counter(workout['type'] for workout in workouts)
+    
+    if not type_counts:
+        print("Нет данных")
+        return
+    
+    labels = list(type_counts.keys())
+    sizes = list(type_counts.values())
+    
+    colors = plt.cm.Set3.colors[:len(labels)]
+    
+    plt.figure(figsize=(10, 8))
+    
+    wedges, texts, autotexts = plt.pie(
+        sizes, 
+        labels=labels, 
+        colors=colors,
+        autopct='%1.1f%%',
+        startangle=90,     
+        textprops={'fontsize': 12}
+    )
+    
+    for autotext in autotexts:
+        autotext.set_color('white')
+        autotext.set_fontweight('bold')
+    
+    plt.title(title, fontsize=16, fontweight='bold', pad=20)
+    plt.axis('equal')
+    plt.legend(
+        wedges, 
+        [f'{label}: {count} ({count/sum(sizes)*100:.1f}%)' 
+         for label, count in zip(labels, sizes)],
+        title="Типы тренировок",
+        loc="center left",
+        bbox_to_anchor=(1, 0, 0.5, 1)
+    )
+    
+    plt.tight_layout()
+    plt.show()
+
 user_name = "Борис"
 user_workouts = find_user_workouts(users, user_name)
-print(analyze_user(users, workouts, user_workouts))
+print(plot_workout_types_pie(workouts, title="Распределение типов тренировок"))

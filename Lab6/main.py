@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
+from collections import Counter
 
 def load_users_data():
     try:
@@ -138,5 +139,48 @@ def find_user_workouts(users, user_name):
             
     return user_workouts
 
+def analyze_user(users, workouts, user_workouts):
+    target_user = None 
+    
+    for user in users:
+        if user.get('name') == user_name:
+            target_user = user
+            user_age = target_user['age']
+            user_weight = target_user['weight']
+            user_fitness_level = target_user['fitness_level']
+    
+    all_calories = 0
+    all_time = 0
+    all_distance = 0
+    all_calories = 0
+    
+    type_counts = Counter(workout['type'] for workout in user_workouts)
+    for types in type_counts:
+        if type_counts:
+            favorite_workout = type_counts.most_common(1)[0][0]
+        else:
+            favorite_workout = "Нет данных"
+    
+    for w in user_workouts:
+        all_calories += w['calories']
+        all_time += w['duration'] / 60
+        all_distance += w['distance']
+        all_calories += w['calories']
+    all_calories = all_calories / 2
+    avg_calories = all_calories / len(user_workouts)
+            
+    text = f'''ДЕТАЛЬНЫЙ АНАЛИЗ ДЛЯ ПОЛЬЗОВАТЕЛЯ: {user_name}
+{'='*50}
+Возраст: {user_age}, Вес: {user_weight}
+Уровень: {user_fitness_level}
+Сожжено калорий: {all_calories}
+Общее время: {all_time:.1f} часов
+Пройдено дистанции: {all_distance:.1f} км
+Средние калории за тренировку: {avg_calories:.0f}
+Любимый тип тренировки: {favorite_workout}
+'''
+    return text
+
 user_name = "Борис"
-print(find_user_workouts(users, user_name))
+user_workouts = find_user_workouts(users, user_name)
+print(analyze_user(users, workouts, user_workouts))
